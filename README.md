@@ -8,10 +8,10 @@
 VOMAC is a modular, event-driven system core designed to build scalable, intelligent, and production-ready architectures.
 Modern AI systems are not just models.
 Real-world systems require:
-structured decision logic
-memory and context handling
-task orchestration
-modular extensibility
+-structured decision logic
+-memory and context handling
+-task orchestration
+-modular extensibility
 observability and control
 VOMAC focuses on the system — not the model.
 
