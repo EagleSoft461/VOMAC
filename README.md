@@ -1,3 +1,7 @@
+![Version](https://img.shields.io/badge/version-v0.1.1-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-active-success)
+
 # VOMAC
 
 **VOMAC (Vision-Oriented Modular AI Core)**  
