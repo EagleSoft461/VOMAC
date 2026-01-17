@@ -71,7 +71,7 @@ The goal is to create a core that supports:
 
 ## 🏗️ Architecture Overview
 
-```bash
+```Text
 +---------------------------+
 |           Core            |
 |  Event Bus • Config • Log |
@@ -101,7 +101,7 @@ Modules implement domain-specific behaviors.
 
 ---
 
-## 🛣️ Roadmap Overview
+## ✨ Roadmap Overview
 
 | Version | Focus |
 |--------|-------|
@@ -142,9 +142,8 @@ Example output:
 Docker-based execution will be introduced in upcoming releases.
 ---
 📄 Documentation
-Detailed technical notes and development logs are available in:
-/docs
-devlog.md
+- `/docs`
+- `devlog.md`
 ---
 ⚠️ Project Status
 VOMAC is under active development.
