@@ -40,7 +40,7 @@ Example:
     "value": 72
   }
 }
-
+```
 ## Output
 VOMAC produces a structured decision result:
 
