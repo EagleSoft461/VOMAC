@@ -63,11 +63,11 @@ Decision behavior can be modified without changing code.
 threshold: 70
 ```
 ▶️ Running VOMAC
-```python
+```bash
 python main.py
 ```
 Example output:
-```json
+```output
 2026-01-17 13:53:36,910 | INFO | VOMAC started with threshold=70
 2026-01-17 13:53:36,910 | INFO | Decision result: {'decision': 'OK', 'reason': 'Value within normal range', 'confidence': 1.0}
 {'decision': 'OK', 'reason': 'Value within normal range', 'confidence': 1.0}
