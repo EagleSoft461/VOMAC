@@ -1,11 +1,29 @@
-![Version](https://img.shields.io/badge/version-v0.1.1-blue)
+![Version](https://img.shields.io/badge/version-v0.2.a-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Status](https://img.shields.io/badge/status-active-success)
+![Status](https://img.shields.io/badge/status-architecture--stabilization-blue)
 
 # VOMAC
 
+## 🚧 Current Development Phase — v0.2.a
+
+VOMAC is currently in **v0.2.a — Architecture Stabilization (Implementation Phase)**.
+
+This version focuses exclusively on:
+
+- system orchestration
+- module lifecycle management
+- contract-based module structure
+- deterministic startup and shutdown
+
+❗ No intelligence, decision logic, memory, AI inference, or event-driven behavior
+is implemented in this phase.
+
+This phase exists to validate the system foundation
+before introducing higher-level reasoning in future versions.
+
 **VOMAC (Vision-Oriented Modular AI Core)**  
-VOMAC is a modular, event-driven system core designed to build scalable, intelligent, and production-ready architectures.
+VOMAC is a modular system orchestration core
+designed to evolve toward event-driven and intelligent architectures.designed to build scalable, intelligent, and production-ready architectures.
 
 Modern AI systems are not just models.  
 Real-world systems require:
@@ -87,15 +105,20 @@ The goal is to create a core that supports:
 The Core manages the system lifecycle.  
 Modules implement domain-specific behaviors.
 
+> Note: The components shown below represent the long-term architecture vision.
+> In v0.2.a, only the orchestration core and module lifecycle layer are implemented.
+
 ---
 
 ## 📦 Current Status
 
-**Version:** v0.1.1
+Version: v0.2.a
 
-**Current focus:**
-
-- foundational decision logic  
+Current focus:
+- architecture stabilization
+- orchestration core implementation
+- module lifecycle standardization
+- contract-based extensibility
 - configuration-driven behavior  
 - early architectural exploration  
 
@@ -125,21 +148,19 @@ Modules implement domain-specific behaviors.
 ---
 
 ## ⚙️ Running the Project
-`config.yaml`
-```yaml
-threshold: 70
-```
 ⚡ Running VOMAC
 ```bash
 python main.py
 ```
 Example output:
 ```output
-2026-01-17 13:53:36,910 | INFO | VOMAC started with threshold=70
-2026-01-17 13:53:36,910 | INFO | Decision result: {'decision': 'OK', 'reason': 'Value within normal range', 'confidence': 1.0}
-{'decision': 'OK', 'reason': 'Value within normal range', 'confidence': 1.0}
+[2026-01-21 14:43:08] [INFO] [CORE] Module loaded: example
+[2026-01-21 14:43:08] [INFO] [CORE] System started
+System running. Press ENTER to shutdown...
+[2026-01-21 14:43:11] [INFO] [CORE] System shutting down
+[2026-01-21 14:43:11] [INFO] [EXAMPLE] Module shut
 ```
-Docker-based execution will be introduced in upcoming releases.
+This version validates system startup and shutdown behavior.
 ---
 📄 Documentation
 - `/docs`
