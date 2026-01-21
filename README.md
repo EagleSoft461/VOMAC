@@ -90,10 +90,10 @@ The goal is to create a core that supports:
 ## 🏗️ Architecture Overview
 
 ```Text
-+---------------------------+
-|           Core            |
-|  Event Bus • Config • Log |
-+-------------+-------------+
++-------------------------------+
+|           Core                |
+| Orchestration • Config • Log  |
++-------------+-----------------+
               |
               v
 +---------------------------+
@@ -119,7 +119,7 @@ Current focus:
 - orchestration core implementation
 - module lifecycle standardization
 - contract-based extensibility
-- configuration-driven behavior  
+- centralized configuration access  
 - early architectural exploration  
 
 ---
