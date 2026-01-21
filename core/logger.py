@@ -1,7 +1,12 @@
-import logging
+from datetime import datetime
 
-def setup_logger():
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(message)s"
-    )
+class Logger:
+    def log(self, level, source, message):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{timestamp}] [{level}] [{source}] {message}")
+
+    def info(self, source, message):
+        self.log("INFO", source, message)
+
+    def error(self, source, message):
+        self.log("ERROR", source, message)
