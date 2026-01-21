@@ -23,7 +23,7 @@ before introducing higher-level reasoning in future versions.
 
 **VOMAC (Vision-Oriented Modular AI Core)**  
 VOMAC is a modular system orchestration core
-designed to evolve toward event-driven and intelligent architectures.designed to build scalable, intelligent, and production-ready architectures.
+designed to evolve toward event-driven and intelligent architectures.
 
 Modern AI systems are not just models.  
 Real-world systems require:
@@ -158,7 +158,7 @@ Example output:
 [2026-01-21 14:43:08] [INFO] [CORE] System started
 System running. Press ENTER to shutdown...
 [2026-01-21 14:43:11] [INFO] [CORE] System shutting down
-[2026-01-21 14:43:11] [INFO] [EXAMPLE] Module shut
+[2026-01-21 14:43:11] [INFO] [EXAMPLE] Module shutting down
 ```
 This version validates system startup and shutdown behavior.
 ---
