@@ -1,3 +1,4 @@
+from core.event_dispatcher import EventDispatcher
 from core.module_loader import ModuleLoader
 from core.config_manager import ConfigManager
 from core.logger import Logger
@@ -7,6 +8,7 @@ class Core:
         self.logger = Logger()
         self.config = ConfigManager()
         self.module_loader = ModuleLoader()
+        self.dispatcher = EventDispatcher(self.logger)
         self.modules = []
 
     def start(self):
@@ -18,11 +20,12 @@ class Core:
             module = self.module_loader.load(name)
             module.init(self)
 
-            self.modules.append(module)
+            self.dispatcher.subscribe(module)
 
+            self.modules.append(module)
             self.logger.info("CORE", f"Module loaded: {name}")
 
-        self.logger.info("CORE","System started")
+        self.logger.info("CORE", "System started")
 
     def shutdown(self):
         self.logger.info("CORE", "System shutting down")

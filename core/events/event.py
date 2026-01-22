@@ -1,11 +1,13 @@
-from dataclasses import dataclass, field
-from datetime import datetime
-from typing import Any, Dict
+import time
 
-@dataclass(frozen=True)
 class Event:
-    type: str
-    source: str
-    payload: Dict[str, Any]
+    """
+    Infrastructure-level event message.
+    Carries data only — no behavior.
+    """
 
-    timestamp: datetime = field(default_factory=datetime.utcnow)
+    def __init__(self, type, payload=None, source=None):
+        self.type = type
+        self.payload = payload or {}
+        self.source = source
+        self.timestamp = time.time()
