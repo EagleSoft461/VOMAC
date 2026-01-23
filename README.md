@@ -1,21 +1,17 @@
-![Version](https://img.shields.io/badge/version-v0.2.a-orange)
+![Version](https://img.shields.io/badge/version-v0.3.0-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Status](https://img.shields.io/badge/status-architecture--stabilization-blue)
+![Status](https://img.shields.io/badge/status-system--awareness-blue)
 
 # VOMAC
 
-## 🚧 Current Development Phase — v0.2.a
+## 🚧 Current Development Phase — v0.3.0
 
-VOMAC is currently in **v0.2.a — Architecture Stabilization (Implementation Phase)**.
+VOMAC is currently in **v0.3.0 — System Awareness Layer (Implementation Phase)**.
 
-This version focuses exclusively on:
+This version introduces system-level state awareness
+through passive memory and live context tracking.
 
-- system orchestration
-- module lifecycle management
-- contract-based module structure
-- deterministic startup and shutdown
-
-❗ No intelligence, decision logic, memory, AI inference, or event-driven behavior
+❗ No intelligence, reasoning, learning, or decision-making
 is implemented in this phase.
 
 This phase exists to validate the system foundation
@@ -106,16 +102,17 @@ The Core manages the system lifecycle.
 Modules implement domain-specific behaviors.
 
 > Note: The components shown below represent the long-term architecture vision.
-> In v0.2.a, only the orchestration core and module lifecycle layer are implemented.
-
+> In v0.3.0, the system introduces passive memory and live context modules that observe events without influencing system behavior.
 ---
 
 ## 📦 Current Status
 
-Version: v0.2.a
+Version: v0.3.0
 
 Current focus:
-- architecture stabilization
+- system awareness layer
+- memory and context modules
+- event-driven state observation
 - orchestration core implementation
 - module lifecycle standardization
 - contract-based extensibility
@@ -129,7 +126,7 @@ Current focus:
 | Version | Focus |
 |--------|-------|
 | v0.2.0 | Architecture stabilization |
-| v0.3.0 | Memory & decision layer |
+| v0.3.0 | Memory & context layer | 
 | v0.4.0 | Task orchestration engine |
 | v0.5.0 | AI module integration |
 | v0.6.0 | Hardware bridge |
@@ -154,11 +151,26 @@ python main.py
 ```
 Example output:
 ```output
-[2026-01-21 14:43:08] [INFO] [CORE] Module loaded: example
-[2026-01-21 14:43:08] [INFO] [CORE] System started
+[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-01-23 17:19:16] [INFO] [CONTEXT] Context module initialized
+[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-01-23 17:19:16] [INFO] [CORE] Module loaded: context
+[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-01-23 17:19:16] [INFO] [EXAMPLE] Module initialized
+[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Dispatching event: EXAMPLE_READY    
+[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-01-23 17:19:16] [INFO] [CORE] Module loaded: example
+[2026-01-23 17:19:16] [INFO] [MEMORY] Memory module initialized
+[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-01-23 17:19:16] [INFO] [CORE] Module loaded: memory
+[2026-01-23 17:19:16] [INFO] [CORE] System started
 System running. Press ENTER to shutdown...
-[2026-01-21 14:43:11] [INFO] [CORE] System shutting down
-[2026-01-21 14:43:11] [INFO] [EXAMPLE] Module shutting down
+[2026-01-23 17:19:18] [INFO] [CORE] System shutting down
+[2026-01-23 17:19:18] [INFO] [CONTEXT] Context module shutdown
+[2026-01-23 17:19:18] [INFO] [EXAMPLE] Module shutting down
+[2026-01-23 17:19:18] [INFO] [MEMORY] Memory cleared on shutdown
+[2026-01-23 17:19:18] [INFO] [CORE] System stopped
 ```
 This version validates system startup and shutdown behavior.
 ---
