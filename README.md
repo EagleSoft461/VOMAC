@@ -1,54 +1,56 @@
-![Version](https://img.shields.io/badge/version-v0.3.0-orange)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Status](https://img.shields.io/badge/status-system--awareness-blue)
-
 # VOMAC
 
-## 🚧 Current Development Phase — v0.3.0
+![Version](https://img.shields.io/badge/version-v0.4.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-active%20development-orange)
 
-VOMAC is currently in **v0.3.0 — System Awareness Layer (Implementation Phase)**.
+---
+## 🚧 Current Development Phase — v0.4.0
 
-This version introduces system-level state awareness
-through passive memory and live context tracking.
+VOMAC is currently in **v0.4.0 — Task Orchestration Infrastructure** phase.
 
-❗ No intelligence, reasoning, learning, or decision-making
-is implemented in this phase.
+This version introduces the **execution foundation** of the system.
 
-This phase exists to validate the system foundation
-before introducing higher-level reasoning in future versions.
+### Included in this version
+- Execution engine lifecycle
+- Worker-based execution model
+- Task abstraction and registry
+- In-memory task queue
+- Event-driven orchestration core
+- Deterministic startup and shutdown
 
-**VOMAC (Vision-Oriented Modular AI Core)**  
-VOMAC is a modular system orchestration core
-designed to evolve toward event-driven and intelligent architectures.
+### Intentionally excluded
+- Event → task routing
+- Task producers
+- Decision logic
+- Intelligence or learning
 
-Modern AI systems are not just models.  
-Real-world systems require:
+The system may appear idle during runtime.  
+This behavior is **expected** and reflects the architectural boundary of v0.4.0.
 
-- structured decision logic  
-- memory and context handling  
-- task orchestration  
-- modular extensibility  
-- observability and control  
-
-**VOMAC focuses on the system — not the model.**
+Task routing will be introduced in **v0.4.1**.
 
 ---
 
-## ❓ What is VOMAC?
+## 🧠 What is VOMAC?
 
-VOMAC is not an AI model.  
-It is not a framework wrapper.  
-It is not a chatbot engine.
+VOMAC (Vision-Oriented Modular AI Core) is **not an AI model**.
 
-**VOMAC is a system orchestration core.**
+It is not:
+- a chatbot engine
+- an LLM wrapper
+- a prompt framework
 
-It provides the foundational layer required to coordinate:
+VOMAC is a **system orchestration core**.
 
-- decision mechanisms  
-- modular components  
-- AI services  
-- hardware events  
-- workflow execution  
+It provides the structural foundation required to coordinate:
+
+- modular components
+- decision mechanisms
+- task execution
+- AI services
+- hardware events
+- workflow lifecycles
 
 AI becomes a tool —  
 **the architecture remains the authority.**
@@ -58,18 +60,19 @@ AI becomes a tool —
 ## 🎯 Project Vision
 
 Most AI projects fail not because models are weak,  
-but because systems around them are fragile.
+but because the surrounding systems are fragile.
 
-VOMAC is built to answer one question:
+VOMAC exists to answer one question:
 
-> **How do we design intelligent systems that can grow safely?**
+> How do we design intelligent systems that can grow safely?
 
-The goal is to create a core that supports:
+The long-term goal is to build a core that supports:
 
-- long-term evolution  
-- modular replacement  
-- system-level reasoning  
-- real-world integration  
+- long-term architectural evolution
+- modular replacement
+- system-level reasoning
+- real-world integration
+- explainable behavior
 
 ---
 
@@ -77,7 +80,7 @@ The goal is to create a core that supports:
 
 - **Architecture First** — structure before intelligence  
 - **Event-Driven Design** — loose coupling by default  
-- **Modular Expansion** — components can evolve independently  
+- **Modular Expansion** — components evolve independently  
 - **AI as a Tool** — not the decision authority  
 - **Production Awareness** — logging, config, isolation  
 
@@ -86,97 +89,86 @@ The goal is to create a core that supports:
 ## 🏗️ Architecture Overview
 
 ```Text
-+-------------------------------+
-|           Core                |
-| Orchestration • Config • Log  |
-+-------------+-----------------+
-              |
-              v
-+---------------------------+
-|         Modules           |
-|  Memory • Reasoning       |
-|  AI • Hardware • Tasks    |
-+---------------------------+
++-----------------------------------+
+| Core                              |
+| Orchestration • Config • Logging  |
++------------------+----------------+
+|
+v
++-----------------------------------+
+| Modules                           |
+| Memory • Decision • Tasks • AI    |
+| Hardware • External Services      |
++-----------------------------------+
  ```             
-The Core manages the system lifecycle.  
-Modules implement domain-specific behaviors.
-
-> Note: The components shown below represent the long-term architecture vision.
-> In v0.3.0, the system introduces passive memory and live context modules that observe events without influencing system behavior.
+The Core manages lifecycle and execution boundaries.  
+Modules implement domain-specific behavior.
 ---
 
 ## 📦 Current Status
 
-Version: v0.3.0
+**Version:** v0.4.0
 
 Current focus:
-- system awareness layer
-- memory and context modules
-- event-driven state observation
-- orchestration core implementation
-- module lifecycle standardization
-- contract-based extensibility
-- centralized configuration access  
-- early architectural exploration  
+- execution infrastructure
+- task abstraction
+- worker lifecycle
+- architectural stabilization
+- clean separation of responsibilities
+
+This version establishes the foundation required for future reasoning layers.
 
 ---
 
 ## ✨ Roadmap Overview
 
 | Version | Focus |
-|--------|-------|
+|------|------|
 | v0.2.0 | Architecture stabilization |
-| v0.3.0 | Memory & context layer | 
-| v0.4.0 | Task orchestration engine |
-| v0.5.0 | AI module integration |
-| v0.6.0 | Hardware bridge |
+| v0.3.0 | Memory & context layer |
+| v0.4.0 | Task orchestration infrastructure |
+| v0.4.1 | Event → task routing |
+| v0.5.0 | Decision layer (rule-based) |
+| v0.6.0 | Intelligence abstraction |
+| v0.7.0 | AI integration (optional) |
 | v1.0.0 | Stable orchestration core |
 
 ---
 
-## 🧪 Example Use Cases
-
-- AI system orchestration  
-- autonomous task pipelines  
-- hybrid decision systems  
-- real-world device integration  
-- research & experimentation core  
-
----
-
 ## ⚙️ Running the Project
-⚡ Running VOMAC
+
 ```bash
 python main.py
 ```
 Example output:
 ```output
-[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-01-23 17:19:16] [INFO] [CONTEXT] Context module initialized
-[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-01-23 17:19:16] [INFO] [CORE] Module loaded: context
-[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-01-23 17:19:16] [INFO] [EXAMPLE] Module initialized
-[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Dispatching event: EXAMPLE_READY    
-[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-01-23 17:19:16] [INFO] [CORE] Module loaded: example
-[2026-01-23 17:19:16] [INFO] [MEMORY] Memory module initialized
-[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-01-23 17:19:16] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-01-23 17:19:16] [INFO] [CORE] Module loaded: memory
-[2026-01-23 17:19:16] [INFO] [CORE] System started
+[2026-02-01 14:23:03] [INFO] [CORE] System starting
+[2026-02-01 14:23:03] [INFO] [ENGINE] Execution engine starting
+[2026-02-01 14:23:03] [INFO] [ENGINE] Worker started
+MODULES PATH: C:\Users\YourName\YourDesktop\VOMAC\modules
+FOUND: ['context', 'example', 'memory']
+[2026-02-01 14:23:03] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-02-01 14:23:03] [INFO] [CONTEXT] Context module initialized
+[2026-02-01 14:23:03] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-02-01 14:23:03] [INFO] [EXAMPLE] Module initialized
+[2026-02-01 14:23:03] [INFO] [EVENT_DISPATCHER] Dispatching event: EXAMPLE_READY
+[2026-02-01 14:23:03] [INFO] [MEMORY] Memory module initialized
+[2026-02-01 14:23:03] [INFO] [EVENT_DISPATCHER] Module subscribed: Module       
+[2026-02-01 14:23:03] [INFO] [EVENT_DISPATCHER] Module subscribed: Module       
+[2026-02-01 14:23:03] [INFO] [CORE] System started
 System running. Press ENTER to shutdown...
-[2026-01-23 17:19:18] [INFO] [CORE] System shutting down
-[2026-01-23 17:19:18] [INFO] [CONTEXT] Context module shutdown
-[2026-01-23 17:19:18] [INFO] [EXAMPLE] Module shutting down
-[2026-01-23 17:19:18] [INFO] [MEMORY] Memory cleared on shutdown
-[2026-01-23 17:19:18] [INFO] [CORE] System stopped
+
+[2026-02-01 14:47:14] [INFO] [CORE] System shutting down
+[2026-02-01 14:47:14] [INFO] [MEMORY] Memory cleared on shutdown
+[2026-02-01 14:47:14] [INFO] [ENGINE] Execution engine stopping
+[2026-02-01 14:47:14] [INFO] [ENGINE] Execution engine stopped
+[2026-02-01 14:47:14] [INFO] [CORE] System stopped
 ```
-This version validates system startup and shutdown behavior.
+This version validates deterministic startup and shutdown behavior.
 ---
 📄 Documentation
 - `/docs`
-- `devlog.md`
+- `decisions`
 ---
 ⚠️ Project Status
 VOMAC is under active development.
