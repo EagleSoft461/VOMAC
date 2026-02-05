@@ -1,19 +1,13 @@
-from core.task.task_registry import TaskRegistry
-from core.task.task_queue import TaskQueue
-from core.task.task_manager import TaskManager
 from core.task.worker import Worker
+from core.task.task_queue import TaskQueue
 import threading
 
-
 class ExecutionEngine:
-    def __init__(self, logger):
+    def __init__(self, logger, queue: TaskQueue):
         self.logger = logger
+        self.queue = queue
 
-        self.registry = TaskRegistry()
-        self.queue = TaskQueue()
-        self.manager = TaskManager(self.registry, self.queue)
-
-        self.worker = Worker(self.queue)
+        self.worker = Worker(self.queue, logger=self.logger)
         self.worker_thread = None
 
     def start(self):
