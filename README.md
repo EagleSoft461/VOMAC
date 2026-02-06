@@ -1,17 +1,21 @@
 # VOMAC
-![Version](https://img.shields.io/badge/version-v0.4.1-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+
+![GitHub release](https://img.shields.io/github/v/release/EagleSoft461/VOMAC?include_prereleases)
+![License](https://img.shields.io/github/license/EagleSoft461/VOMAC)
 ![Status](https://img.shields.io/badge/status-active%20development-orange)
+![Docker](https://img.shields.io/badge/docker-ready-2496ED?logo=docker&logoColor=white)
 
----
+🚧 **Current Development Phase — v0.5.0**  
+VOMAC is currently in **v0.5.0 — Rule-Based Decision Layer**.
 
-## 🚧 Current Development Phase — v0.4.1
-VOMAC is currently in **v0.4.1 — Task Routing & Event-to-Task Mapping**.
+This version introduces the system’s first deterministic decision capability:
 
-This version introduces the missing execution link between events and tasks.
+✅ Events can trigger decisions  
+✅ Decisions select tasks via ordered rules  
+✅ Tasks are executed through the worker pipeline  
+✅ Docker support included for reproducible execution  
 
-✅ Events can now automatically produce executable tasks.  
-❗ No intelligence, reasoning, learning, or decision-making is implemented in this phase.
+❗ No intelligence, learning, LLMs, or external reasoning is implemented in this phase.
 
 ---
 
@@ -21,23 +25,23 @@ This version introduces the missing execution link between events and tasks.
 
 It is not:
 
-- a chatbot engine
-- an LLM wrapper
-- a prompt framework
+- a chatbot engine  
+- an LLM wrapper  
+- a prompt framework  
 
 VOMAC is a **system orchestration core**.
 
 It provides the foundational layer required to coordinate:
 
-- modular components
-- decision mechanisms (future)
-- task execution
-- AI services (future)
-- hardware events (future)
-- workflow lifecycles
+- modular components  
+- task execution  
+- deterministic decision mechanisms  
+- AI services *(future)*  
+- hardware events *(future)*  
+- workflow lifecycles  
 
 AI becomes a tool —  
-the architecture remains the authority.
+**the architecture remains the authority.**
 
 ---
 
@@ -52,11 +56,11 @@ VOMAC exists to answer one question:
 
 The long-term goal is to build a core that supports:
 
-- long-term architectural evolution
-- modular replacement
-- system-level reasoning (future)
-- real-world integration
-- explainable behavior
+- long-term architectural evolution  
+- modular replacement  
+- system-level reasoning *(future)*  
+- real-world integration  
+- explainable behavior  
 
 ---
 
@@ -95,15 +99,15 @@ Modules implement domain-specific behaviors.
 
 ## 📦 Current Status
 
-Version: v0.4.1
+Version: v0.5.0
 
-- Current focus
-- task routing layer (Event → Task)
-- deterministic task execution pipeline
-- worker lifecycle stability
+Current focus:
+
+- rule-based deterministic decision layer
+- explainable task selection
+- stable execution pipeline
 - clean separation of responsibilities
-- architecture stabilization 
-
+- Docker support for reproducibility
 ---
 
 ## ✨ Roadmap Overview
@@ -122,48 +126,58 @@ Version: v0.4.1
 ---
 
 ## ⚙️ Running the Project
-⚡ Running VOMAC
+▶️ Run locally
 ```bash
 python main.py
 ```
+
+🐳 Run with Docker (v0.5.0+)
+```bash
+docker build -t vomac .
+docker run -it vomac
+```
+> The system runs in interactive mode (Press ENTER to shutdown...),
+> therefore Docker execution requires -it.
+
 Example output:
 ```output
-[2026-02-05 11:46:38] [INFO] [ROUTER] Route registered: EXAMPLE_READY
-[2026-02-05 11:46:38] [INFO] [EVENT_DISPATCHER] Module subscribed: TaskRouter
-[2026-02-05 11:46:38] [INFO] [ROUTER] TaskRouter started
-[2026-02-05 11:46:38] [INFO] [CORE] System starting
-[2026-02-05 11:46:38] [INFO] [ENGINE] Execution engine starting
-[2026-02-05 11:46:38] [INFO] [WORKER] Worker loop started
-[2026-02-05 11:46:38] [INFO] [ENGINE] Worker started
-MODULES PATH: C:\Users\your_username\Desktop\VOMAC\modules
-FOUND: ['context', 'example', 'memory']
-[2026-02-05 11:46:38] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-02-05 11:46:38] [INFO] [CONTEXT] Context module initialized
-[2026-02-05 11:46:38] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-02-05 11:46:38] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-02-05 11:46:38] [INFO] [EXAMPLE] Module initialized
-[2026-02-05 11:46:38] [INFO] [EVENT_DISPATCHER] Dispatching event: EXAMPLE_READY
-[2026-02-05 11:46:38] [INFO] [ROUTER] Event received: EXAMPLE_READY
-[2026-02-05 11:46:38] [INFO] [ROUTER] Submitting task: EXAMPLE_READY_TASK
-[2026-02-05 11:46:38] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-02-05 11:46:38] [INFO] [MEMORY] Memory module initialized
-[2026-02-05 11:46:38] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-02-05 11:46:38] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
-[2026-02-05 11:46:38] [INFO] [CORE] System started
-System running. Press ENTER to shutdown...[2026-02-05 11:46:39] [INFO] [WORKER] Executing task: ExampleReadyTask
-[2026-02-05 11:46:39] [INFO] [TASK] [EXAMPLE_READY_TASK] executed successfully
-[2026-02-05 11:46:39] [INFO] [TASK] [EXAMPLE_READY_TASK] executed successfully
-[2026-02-05 11:46:39] [INFO] [WORKER] Task completed: ExampleReadyTask
+[2026-02-06 11:08:54] [INFO] [DECISION] Rule registered: rule_example_ready
+[2026-02-06 11:08:54] [INFO] [EVENT_DISPATCHER] Module subscribed: TaskRouter       
+[2026-02-06 11:08:54] [INFO] [ROUTER] TaskRouter started (v0.5.0)
+[2026-02-06 11:08:54] [INFO] [CORE] System starting
+[2026-02-06 11:08:54] [INFO] [ENGINE] Execution engine starting
+[2026-02-06 11:08:54] [INFO] [WORKER] Worker loop started
+[2026-02-06 11:08:54] [INFO] [ENGINE] Worker started
+MODULES PATH: /app/modules
+FOUND: ['example', 'context', 'memory']
+[2026-02-06 11:08:54] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-02-06 11:08:54] [INFO] [EXAMPLE] Module initialized
+[2026-02-06 11:08:54] [INFO] [EVENT_DISPATCHER] Dispatching event: EXAMPLE_READY    
+[2026-02-06 11:08:54] [INFO] [ROUTER] Event received: EXAMPLE_READY
+[2026-02-06 11:08:54] [INFO] [DECISION] Decision requested for event: EXAMPLE_READY 
+[2026-02-06 11:08:54] [INFO] [DECISION] Rule matched: rule_example_ready
+[2026-02-06 11:08:54] [INFO] [ROUTER] Decision selected task: EXAMPLE_READY_TASK (rule=rule_example_ready)
+[2026-02-06 11:08:54] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-02-06 11:08:54] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-02-06 11:08:54] [INFO] [CONTEXT] Context module initialized
+[2026-02-06 11:08:54] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-02-06 11:08:54] [INFO] [MEMORY] Memory module initialized
+[2026-02-06 11:08:54] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-02-06 11:08:54] [INFO] [EVENT_DISPATCHER] Module subscribed: Module
+[2026-02-06 11:08:54] [INFO] [CORE] System started
+System running. Press ENTER to shutdown...[2026-02-06 11:08:54] [INFO] [WORKER] Executing task: ExampleReadyTask
+[2026-02-06 11:08:54] [INFO] [TASK] [EXAMPLE_READY_TASK] executed successfully      
+[2026-02-06 11:08:54] [INFO] [WORKER] Task completed: ExampleReadyTask
 
 
-[2026-02-05 11:46:44] [INFO] [CORE] System shutting down
-[2026-02-05 11:46:44] [INFO] [CONTEXT] Context module shutdown
-[2026-02-05 11:46:44] [INFO] [EXAMPLE] Module shutting down
-[2026-02-05 11:46:44] [INFO] [MEMORY] Memory cleared on shutdown
-[2026-02-05 11:46:44] [INFO] [ENGINE] Execution engine stopping
-[2026-02-05 11:46:44] [INFO] [WORKER] Worker loop stopped
-[2026-02-05 11:46:44] [INFO] [ENGINE] Execution engine stopped
-[2026-02-05 11:46:44] [INFO] [CORE] System stopped
+[2026-02-06 11:09:06] [INFO] [CORE] System shutting down
+[2026-02-06 11:09:06] [INFO] [EXAMPLE] Module shutting down
+[2026-02-06 11:09:06] [INFO] [CONTEXT] Context module shutdown
+[2026-02-06 11:09:06] [INFO] [MEMORY] Memory cleared on shutdown
+[2026-02-06 11:09:06] [INFO] [ENGINE] Execution engine stopping
+[2026-02-06 11:09:06] [INFO] [WORKER] Worker loop stopped
+[2026-02-06 11:09:06] [INFO] [ENGINE] Execution engine stopped
+[2026-02-06 11:09:06] [INFO] [CORE] System stopped
 ```
 This version validates system startup and shutdown behavior.
 ---
