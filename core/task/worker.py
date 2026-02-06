@@ -27,8 +27,7 @@ class Worker:
 
                     self.logger.info("WORKER", f"Executing task: {task.__class__.__name__}")
                     task.start()
-                    task.execute()
-                    task.complete()
+                   
                     self.logger.info("WORKER", f"Task completed: {task.__class__.__name__}")
                 except Exception as e:
                     self.logger.error("WORKER", f"Task failed: {e}")

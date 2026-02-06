@@ -9,6 +9,10 @@ from core.task.task_manager import TaskManager
 from core.logger import Logger
 from core.task.example_ready_task import ExampleReadyTask
 
+from core.decision.decision_engine import DecisionEngine
+from core.decision.rule import Rule
+from core.decision.decision_result import DecisionResult
+
 
 class Core:
     def __init__(self):
@@ -26,15 +30,31 @@ class Core:
         self.task_queue = TaskQueue()
         self.task_manager = TaskManager(self.task_registry, self.task_queue)
 
+        # Decision layer (v0.5.0)
+        self.decision_engine = DecisionEngine(self.logger)
+
+        self.decision_engine.register_rule(
+            Rule(
+                name="rule_example_ready",
+                condition=lambda ctx: ctx.event_type == "EXAMPLE_READY",
+                action=lambda ctx: DecisionResult(
+                    task_name=ExampleReadyTask.NAME,
+                    payload={},
+                    matched_rule=None,
+                    evaluated_rules=[]
+                )
+            )
+        )
+
         # Execution engine
         self.engine = ExecutionEngine(self.logger, self.task_queue)
 
-        # Task routing (Event -> Task)
-        self.task_router = TaskRouter(self.dispatcher, self.task_manager, self.logger)
-
-        self.task_router.add_route(
-            "EXAMPLE_READY",
-            lambda event: {"task_name": ExampleReadyTask.NAME, "payload": {}}
+        # Task routing (Event -> Decision -> Task)
+        self.task_router = TaskRouter(
+            self.dispatcher,
+            self.task_manager,
+            self.decision_engine,
+            self.logger
         )
 
         self.task_router.start()
@@ -52,7 +72,6 @@ class Core:
             module = self.module_loader.load(name)
             module.init(self)
 
-            # Subscribe module to events
             self.dispatcher.subscribe(module)
             self.modules.append(module)
 

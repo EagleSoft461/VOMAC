@@ -1,49 +1,49 @@
-from typing import Callable, Dict, Optional, Any
-
+from core.decision.decision_context import DecisionContext
 class TaskRouter:
     """
-    TaskRouter is responsible for mapping events to tasks.
+    v0.5.0 TaskRouter
 
-    - It does NOT execute tasks.
-    - It does NOT make decisions.
-    - It only translates events into task submissions.
+    - listens to events
+    - builds DecisionContext
+    - asks DecisionEngine for a DecisionResult
+    - submits tasks via TaskManager
     """
 
-    def __init__(self, event_dispatcher, task_manager, logger):
+    def __init__(self, event_dispatcher, task_manager, decision_engine, logger):
         self._dispatcher = event_dispatcher
         self._task_manager = task_manager
+        self._decision_engine = decision_engine
         self._logger = logger
-        self._routes: Dict[str, Callable[[Any], Optional[dict]]] = {}
-
-    def add_route(self, event_type: str, handler: Callable[[Any], Optional[dict]]):
-        self._routes[event_type] = handler
-        self._logger.info("ROUTER", f"Route registered: {event_type}")
 
     def start(self):
         self._dispatcher.subscribe(self)
-        self._logger.info("ROUTER", "TaskRouter started")
+        self._logger.info("ROUTER", "TaskRouter started (v0.5.0)")
 
     def on_event(self, event):
         event_type = getattr(event, "type", None)
-        if not event_type:
-            return
+        payload = getattr(event, "payload", None) or {}
 
-        handler = self._routes.get(event_type)
-        if not handler:
+        if not event_type:
             return
 
         self._logger.info("ROUTER", f"Event received: {event_type}")
 
-        data = handler(event)
-        if data is None:
+        ctx = DecisionContext(
+            event_type=event_type,
+            event_payload=payload,
+            memory_snapshot=None,
+            context_snapshot=None
+        )
+
+        result = self._decision_engine.decide(ctx)
+
+        if not result.task_name:
+            self._logger.info("ROUTER", f"No task selected for event: {event_type}")
             return
 
-        task_name = data.get("task_name")
-        task_payload = data.get("payload", {})
+        self._logger.info(
+            "ROUTER",
+            f"Decision selected task: {result.task_name} (rule={result.matched_rule})"
+        )
 
-        if not task_name:
-            self._logger.warning("ROUTER", f"Route for {event_type} returned no task_name")
-            return
-
-        self._logger.info("ROUTER", f"Submitting task: {task_name}")
-        self._task_manager.submit(task_name, task_payload)
+        self._task_manager.submit(result.task_name, result.payload)
