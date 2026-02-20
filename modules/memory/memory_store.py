@@ -32,6 +32,17 @@ class MemoryStore:
         """
         return list(self._events)
     
+    def snapshot(self) -> dict:
+        """
+        Return a serializable snapshot of current memory state.
+        """
+        return {
+            "event_count": len(self._events),
+            "last_event_type": self._events[-1].type if self._events else None,
+            "recent_events": [e.type for e in self._events[-10:]],
+            "max_events": self.MAX_EVENTS
+        }
+    
     def clear(self) -> None:
         """
         Clear all memory contents.

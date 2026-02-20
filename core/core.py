@@ -9,6 +9,8 @@ from core.task.task_manager import TaskManager
 from core.logger import Logger
 from core.task.example_ready_task import ExampleReadyTask
 
+from core.events.event import Event
+
 from core.decision.decision_engine import DecisionEngine
 from core.decision.rule import Rule
 from core.decision.decision_result import DecisionResult
@@ -30,17 +32,21 @@ class Core:
         self.task_queue = TaskQueue()
         self.task_manager = TaskManager(self.task_registry, self.task_queue)
 
-        # Decision layer (v0.5.0)
+        # Decision layer (v0.5.0+)
         self.decision_engine = DecisionEngine(self.logger)
 
+        # Demo rule (v0.5.1)
         self.decision_engine.register_rule(
             Rule(
-                name="rule_example_ready",
-                condition=lambda ctx: ctx.event_type == "EXAMPLE_READY",
+                name="rule_example_ready_first_3",
+                condition=lambda ctx: (
+                    ctx.event_type == "EXAMPLE_READY"
+                    and ctx.event_payload.get("i", 999) < 3
+                ),
                 action=lambda ctx: DecisionResult(
                     task_name=ExampleReadyTask.NAME,
-                    payload={},
-                    matched_rule=None,
+                    payload=ctx.event_payload,
+                    matched_rule="rule_example_ready_first_3",
                     evaluated_rules=[]
                 )
             )
@@ -49,31 +55,54 @@ class Core:
         # Execution engine
         self.engine = ExecutionEngine(self.logger, self.task_queue)
 
+        # v0.5.1 Snapshot provider registry
+        self.snapshot_providers = {}
+
         # Task routing (Event -> Decision -> Task)
         self.task_router = TaskRouter(
             self.dispatcher,
             self.task_manager,
             self.decision_engine,
-            self.logger
+            self.logger,
+            snapshot_providers=self.snapshot_providers
         )
-
-        self.task_router.start()
 
         self.modules = []
 
     def start(self):
         self.logger.info("CORE", "System starting")
 
+        # Start worker engine first
         self.engine.start()
 
+        # Load modules
         module_names = self.module_loader.discover()
 
         for name in module_names:
             module = self.module_loader.load(name)
             module.init(self)
 
+            # Subscribe module to events
             self.dispatcher.subscribe(module)
             self.modules.append(module)
+
+            # v0.5.1 Snapshot provider registration
+            if hasattr(module, "get_snapshot"):
+                self.snapshot_providers[name] = module
+                self.logger.info("CORE", f"Snapshot provider registered: {name}")
+
+        # Start router AFTER modules are ready
+        self.task_router.start()
+
+        # Emit example events AFTER router started
+        for i in range(5):
+            self.dispatcher.emit(
+                Event(
+                    type="EXAMPLE_READY",
+                    source="core",
+                    payload={"i": i}
+                )
+            )
 
         self.logger.info("CORE", "System started")
 

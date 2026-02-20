@@ -8,7 +8,7 @@ The focus is on system stability before intelligence.
 
 ---
 
-## ✅ v0.1.1 — Decision Core Prototype (Completed)
+## ✅ v0.1.x — Decision Core Prototype (Completed)
 
 **Goal:** Validate basic decision flow and configuration handling.
 
@@ -20,100 +20,136 @@ The focus is on system stability before intelligence.
 - Initial architecture exploration
 
 ### Limitations Identified
-- Core contains business logic
-- Pipeline architecture limits scalability
+- Core contained business logic
+- Pipeline architecture limited scalability
 - Tight coupling between components
 
 These limitations motivated the architectural redesign in v0.2.0.
 
 ---
 
-## 🚧 v0.2.0 — Architecture Stabilization (Current Focus)
+## ✅ v0.2.0 — Architecture Stabilization (Completed)
 
 **Goal:** Establish a scalable and modular system foundation.
 
-### Objectives
-- Transform Core into orchestration layer
-- Introduce event-driven communication
-- Standardize module lifecycle
-- Centralize configuration management
-- Centralize logging system
-- Remove business logic from Core
-
-### Must-Have (Release Criteria)
-- Core contains no decision logic
-- Modules communicate only via events
-- Unified module interface
-- Deterministic system lifecycle
-- At least one example module
+### Implemented
+- Core as orchestration layer only (no business logic)
+- Event-driven communication (EventDispatcher)
+- Standardized module lifecycle and interface
+- Centralized configuration and logging
 - System start → run → shutdown flow
 
-### Explicitly Out of Scope
-- Memory algorithms
-- Reasoning logic
-- AI integration
-- Hardware communication
+---
 
-### Success Indicators
-- System can boot with multiple modules
-- Modules can be added or removed without Core changes
-- Event flow can be traced end-to-end via logs
+## ✅ v0.3.0 — Memory & Context Layer (Completed)
 
-This version focuses purely on architecture.
+**Goal:** Introduce system state awareness without decision logic.
+
+### Implemented
+- **Memory** module: event history store (append-only, in-process)
+- **Context** module: current system state (last event, counters, lifecycle flags)
+- Passive observers only; no task production or reasoning
+- ContextSnapshot / memory snapshot concepts for safe read-only exposure
+
+See: `docs/architecture/architecture-v0.3.0.md`, ADR-002, ADR-003.
 
 ---
 
-## 🧠 v0.3.0 — Memory & Decision Layer
+## ✅ v0.4.0 — Task Orchestration Infrastructure (Completed)
 
-**Goal:** Introduce system-level thinking capabilities.
+**Goal:** Enable the system to execute work units.
 
-### Planned Features
-- Short-term memory module
-- Long-term memory abstraction
-- Decision rules engine
-- Context-aware reasoning
-- Explainable decision outputs
-- Deterministic startup/shutdown behavior
-- Predictable resource usage
-- Versioned module interfaces
+### Implemented
+- Task model, TaskRegistry, TaskQueue, TaskManager
+- ExecutionEngine and Worker(s)
+- Deterministic task execution pipeline
+- No event→task link yet (tasks submitted manually or by later layers)
 
-Built on top of the stabilized v0.2.0 architecture.
+See: `docs/architecture/architecture-v0.4.0.md`.
 
 ---
 
-## ⚙️ v0.4.0 — Task Orchestration Engine
+## ✅ v0.4.1 — Event → Task Routing (Completed)
 
-**Goal:** Enable complex workflow management.
+**Goal:** Connect events to task submission.
 
-### Planned Features
-- Task representation model
-- Task queue system
-- Priority handling
-- Parallel execution support
-- Workflow lifecycle tracking
+### Implemented
+- TaskRouter: listens to events, submits tasks via TaskManager
+- Event-to-task mapping (at first, simple mapping table)
+- Router runs after modules; event flow drives task execution
+
+See: `docs/architecture/architecture-v0.4.1.md`.
 
 ---
 
-## 🤖 v0.5.0 — AI Module Integration
+## ✅ v0.5.0 — Decision Layer, Rule-Based (Completed)
+
+**Goal:** Deterministic rule-based selection of tasks.
+
+### Implemented
+- DecisionEngine: ordered rules, first-match-wins
+- Rule: condition(ctx) → bool, action(ctx) → DecisionResult
+- DecisionContext (event + payload) and DecisionResult (task + trace)
+- TaskRouter builds context, calls DecisionEngine, submits selected task
+- No AI; decisions are explicit and explainable
+
+See: `docs/architecture/architecture-v0.5.0.md`.
+
+---
+
+## 🚧 v0.5.1 — Snapshot Provider System (Current)
+
+**Goal:** Feed module state into decisions via read-only snapshots.
+
+### Implemented
+- SnapshotProvider interface (`get_snapshot()`)
+- Core registers modules that implement `get_snapshot()` as snapshot providers
+- TaskRouter collects Memory and Context snapshots before calling DecisionEngine
+- DecisionContext extended with `memory_snapshot` and `context_snapshot`
+- Rules can use system state without coupling to module internals
+
+See: `docs/architecture/architecture-v0.5.1.md`.
+
+---
+
+## 📋 v0.6.0 — Intelligence Abstraction (Planned)
+
+**Goal:** Abstract how “decisions” are made so different strategies can be plugged in.
+
+### Planned
+- DecisionStrategy / DecisionProvider interface (context in → result out)
+- Current rule engine as first strategy implementation
+- Configurable strategy selection (e.g. rule_based vs future policy/scoring)
+- Documentation and tests for the abstraction
+
+See: `docs/next-version-v0.6.0.md`.
+
+### Explicitly out of scope for v0.6.0
+- Real AI/LLM integration
+- Hardware bridge
+- Persistence
+
+---
+
+## 📋 v0.7.0 — AI Integration (Optional) (Planned)
 
 **Goal:** Integrate AI as a managed system component.
 
-### Planned Features
+### Planned
 - AI module abstraction
-- NLP / Vision module examples
-- Model swap capability
-- Inference isolation
+- Optional NLP / Vision module examples
+- Model swap capability, inference isolation
 - AI output normalization
 
 AI remains a tool, not the system authority.
 
 ---
 
-## 🔌 v0.6.0 — Hardware Bridge
+## 📋 v0.8.0+ — Hardware Bridge (Planned)
 
-**Goal:** Connect digital reasoning with real-world signals.
+**Goal:** Connect digital core with real-world signals.
 
-### Planned Features
+### Planned
 - MQTT / WebSocket bridge
 - Device event adapters
 - Sensor simulation layer
@@ -121,18 +157,15 @@ AI remains a tool, not the system authority.
 
 ---
 
-## 🏁 v1.0.0 — Stable Orchestration Core
+## 🏁 v1.0.0 — Stable Orchestration Core (Target)
 
 **Goal:** Production-ready system foundation.
 
 ### Targets
 - Clean architecture boundaries
 - Stable public interfaces
-- Full documentation
-- Demo scenarios
+- Full documentation and demo scenarios
 - Long-term maintainability
-- Deterministic startup/shutdown behavior
-- Predictable resource usage
-- Versioned module interfaces
+- Deterministic startup/shutdown, predictable resource usage
 
 This release marks architectural maturity.
