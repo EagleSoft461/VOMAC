@@ -1,18 +1,19 @@
 # VOMAC
-![Version](https://img.shields.io/badge/version-v0.5.1-blue)
+![Version](https://img.shields.io/badge/version-v0.6.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-active%20development-orange)
 
 ---
 
-## 🚧 Current Development Phase — v0.5.1
+## 🚧 Current Development Phase — v0.6.0
 
-VOMAC is currently in **v0.5.1 — Snapshot Provider System**.
+VOMAC is currently in **v0.6.0 — Intelligence Abstraction**.
 
-This version adds structured state snapshots from modules into the decision pipeline.
+This version introduces a strategy pattern for decision-making, enabling pluggable strategies without changing callers.
 
 ✅ **v0.5.0** — Rule-based decision layer (Event → DecisionEngine → Task).  
-✅ **v0.5.1** — Snapshot providers: Memory and Context expose read-only snapshots; TaskRouter collects them and passes them to DecisionContext so rules can use system state.  
+✅ **v0.5.1** — Snapshot providers: Memory and Context expose read-only snapshots.  
+✅ **v0.6.0** — Intelligence abstraction: DecisionStrategy interface, RuleBasedStrategy implementation, pluggable strategies.  
 ❗ No AI, learning, or external reasoning is implemented yet.
 
 ---
@@ -79,7 +80,9 @@ Event
   ↓
 TaskRouter (collects Memory + Context snapshots)
   ↓
-DecisionEngine (rule-based, first-match-wins)
+DecisionEngine (delegates to DecisionStrategy)
+  ↓
+RuleBasedStrategy (default: rule-based, first-match-wins)
   ↓
 TaskManager.submit() → TaskQueue → Worker
 ```
@@ -106,11 +109,12 @@ Modules that implement `get_snapshot()` are used as snapshot providers for decis
 
 ## 📦 Current Status
 
-**Version: v0.5.1**
+**Version: v0.6.0**
 
+- Intelligence abstraction: DecisionStrategy interface, pluggable strategies (v0.6.0)
 - Rule-based decision layer (v0.5.0)
 - Snapshot provider system: Memory & Context feed DecisionContext (v0.5.1)
-- Event → snapshot collection → rule evaluation → task submission
+- Event → snapshot collection → strategy decision → task submission
 - Deterministic task execution pipeline
 - Worker lifecycle stability
 - Clean separation of responsibilities
@@ -126,8 +130,8 @@ Modules that implement `get_snapshot()` are used as snapshot providers for decis
 | v0.4.0    | Task orchestration infrastructure   |
 | v0.4.1    | Event → task routing                |
 | v0.5.0    | Decision layer (rule-based)         |
-| **v0.5.1**| **Snapshot providers (current)**    |
-| v0.6.0    | Intelligence abstraction            |
+| v0.5.1    | Snapshot providers                  |
+| **v0.6.0**| **Intelligence abstraction (current)** |
 | v0.7.0    | AI integration (optional)            |
 | v1.0.0    | Stable orchestration core           |
 
@@ -168,7 +172,7 @@ System running. Press ENTER to shutdown...
 ## 📄 Documentation
 
 - `/docs` — architecture and decisions
-- `/docs/architecture` — versioned architecture docs (e.g. `architecture-v0.5.0.md`, `architecture-v0.5.1.md`)
+- `/docs/architecture` — versioned architecture docs (e.g. `architecture-v0.5.0.md`, `architecture-v0.5.1.md`, `architecture-v0.6.0.md`)
 - `devlog.md` — development log
 - `roadmap.md` — roadmap details
 

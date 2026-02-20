@@ -112,22 +112,19 @@ See: `docs/architecture/architecture-v0.5.1.md`.
 
 ---
 
-## 📋 v0.6.0 — Intelligence Abstraction (Planned)
+## ✅ v0.6.0 — Intelligence Abstraction (Completed)
 
 **Goal:** Abstract how “decisions” are made so different strategies can be plugged in.
 
-### Planned
-- DecisionStrategy / DecisionProvider interface (context in → result out)
-- Current rule engine as first strategy implementation
-- Configurable strategy selection (e.g. rule_based vs future policy/scoring)
-- Documentation and tests for the abstraction
+### Implemented
+- **DecisionStrategy interface** — Abstract base for all decision strategies
+- **RuleBasedStrategy** — Original DecisionEngine logic as a strategy implementation
+- **DecisionEngine as wrapper** — Delegates to a pluggable strategy
+- **Strategy swapping** — Can change strategies at runtime via `set_strategy()`
+- **Backward compatibility** — Default behavior unchanged, no migration needed
+- **Example strategy** — NoOpStrategy demonstrates pluggability
 
-See: `docs/next-version-v0.6.0.md`.
-
-### Explicitly out of scope for v0.6.0
-- Real AI/LLM integration
-- Hardware bridge
-- Persistence
+See: `docs/architecture/architecture-v0.6.0.md`.
 
 ---
 
