@@ -1,0 +1,5 @@
+system:
+  name: "VOMAC"
+  version: "0.6.1"
+logging:
+  level: "INFO"

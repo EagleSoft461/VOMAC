@@ -1,264 +1,230 @@
-# VOMAC v0.5.1 — Snapshot Provider System
+# VOMAC v0.5.1 — Snapshot-Aware Decision Context Architecture
 
 ## Overview
 
-VOMAC v0.5.1 extends v0.5.0 with a **Snapshot Provider System**.
+VOMAC v0.5.1 extends the Rule-Based Decision Layer introduced in v0.5.0.
 
-This version enhances the Decision Layer by enabling modules to expose their state as structured snapshots, which are then collected by the TaskRouter and passed to the DecisionEngine as part of the DecisionContext.
+In v0.5.0, rules could only evaluate incoming events.
 
+In v0.5.1, rules gain access to the system’s **current state
+snapshots**:
+
+- Context snapshot (live system state)
+- Memory snapshot (historical / stored state)
+
+This enables deterministic decisions that depend not only on the current event, but also on the system’s internal state.
+
+This version still does not introduce AI, learning, or external intelligence.
 ---
-
 ## Design Goal
 
 The primary goal of v0.5.1 is:
 
-> Enable modules to expose their internal state as structured snapshots  
-> for use in decision-making, without exposing mutable state directly.
+> Allow rules to evaluate decisions based on
+> event + memory snapshot + context snapshot
+> in a deterministic and testable manner.
 
 The system must be able to:
 
-- register modules as snapshot providers
-- collect snapshots from multiple modules
-- pass snapshots to decision rules safely
-- maintain clear separation between state and snapshots
+- collect snapshots from modules
 
----
+- inject snapshots into DecisionContext
 
-## What Changed from v0.5.0
+- keep memory/context passive (read-only)
 
-v0.5.0 introduced the Decision Layer with rule-based task selection. However, DecisionContext only contained event information.
-
-v0.5.1 adds:
-
-- **SnapshotProvider interface** — abstract base for modules that can provide snapshots
-- **Snapshot provider registry** — Core maintains a registry of modules that implement `get_snapshot()`
-- **Snapshot collection** — TaskRouter collects snapshots from registered providers before decision-making
-- **Enhanced DecisionContext** — now includes `memory_snapshot` and `context_snapshot` fields
-
----
+- preserve deterministic execution flow
 
 ## Core Philosophy
 
 In v0.5.1:
 
-- Modules remain independent observers
-- Snapshots are read-only, serializable representations
-- Decision rules can access system state without coupling
-- State remains encapsulated within modules
-- Snapshot collection is optional and fault-tolerant
+- Events are still raw signals
 
----
+- Tasks are still pure work units
+
+- Execution remains mechanical
+
+- Rules remain deterministic and side-effect free
+
+- Memory and Context remain passive observers
+
+The system becomes state-aware, but not intelligent.
 
 ## Architectural Position
 
-The Snapshot Provider System sits between modules and decision-making:
-
+The snapshot layer sits inside DecisionContext.
 ```text
-Module (Memory/Context)
-  ↓ (implements get_snapshot())
-Core (registers as snapshot provider)
-  ↓ (passes registry to TaskRouter)
-TaskRouter (collects snapshots on event)
-  ↓ (builds DecisionContext with snapshots)
-DecisionEngine (evaluates rules with context)
+Event
+  ↓
+TaskRouter
+  ↓
+DecisionContext (event + snapshots)
+  ↓
+DecisionEngine (rules)
+  ↓
+DecisionResult
   ↓
 TaskManager.submit()
+  ↓
+TaskQueue
+  ↓
+Worker.execute()
 ```
-
----
 
 ## Main Components
 
-### SnapshotProvider Interface
+### SnapshotProvider Interface (New)
 
-An abstract base class defining the snapshot contract.
+A minimal contract for modules that can provide snapshots.
 
-```python
-class SnapshotProvider(ABC):
-    @abstractmethod
-    def get_snapshot(self) -> Dict[str, Any]:
-        pass
-```
+Responsibilities:
 
-Any module implementing `get_snapshot()` can be registered as a snapshot provider.
+- expose a get_snapshot() method
 
-### Snapshot Provider Registry
+- return serializable state data
 
-Core maintains a dictionary mapping module names to snapshot provider instances:
+- never modify system state
 
-```python
-self.snapshot_providers = {}
-```
+Example:
 
-During module initialization, Core checks if a module implements `get_snapshot()` and registers it:
+- ContextModule implements snapshot provider
 
-```python
-if hasattr(module, "get_snapshot"):
-    self.snapshot_providers[name] = module
-```
+- MemoryModule implements snapshot provider
 
-### TaskRouter Snapshot Collection
+## Context Snapshot
 
-When TaskRouter receives an event, it collects snapshots from registered providers:
+A Context snapshot represents the current system state.
 
-```python
-memory_snapshot = None
-context_snapshot = None
+Examples:
 
-if "memory" in self._snapshot_providers:
-    memory_snapshot = self._snapshot_providers["memory"].get_snapshot()
+- last event type
 
-if "context" in self._snapshot_providers:
-    context_snapshot = self._snapshot_providers["context"].get_snapshot()
-```
+- current module states
 
-Snapshots are collected with error handling — failures do not block decision-making.
+- timestamps
 
-### Enhanced DecisionContext
+- runtime flags
 
-DecisionContext now includes snapshot fields:
+- system mode
 
-```python
-ctx = DecisionContext(
-    event_type=event_type,
-    event_payload=payload,
-    memory_snapshot=memory_snapshot,      # v0.5.1
-    context_snapshot=context_snapshot      # v0.5.1
-)
-```
+This snapshot is read-only.
 
-Rules can now access system state through these snapshots.
+## Memory Snapshot
 
----
+A Memory snapshot represents stored system state.
 
-## Module Implementation
+Examples:
 
-### Memory Module
+- last N events
 
-The Memory module implements `get_snapshot()` to expose event history statistics:
+- stored facts
 
-```python
-def get_snapshot(self):
-    return self.store.snapshot()
-```
+- counters
 
-Returns:
-- `event_count`: number of stored events
-- `last_event_type`: type of most recent event
-- `recent_events`: list of recent event types
-- `max_events`: maximum capacity
+- session history
 
-### Context Module
+This snapshot is read-only.
 
-The Context module implements `get_snapshot()` to expose current system state:
+## DecisionContext (Extended)
 
-```python
-def get_snapshot(self):
-    return self.state.snapshot()
-```
+DecisionContext now includes:
 
-Returns:
-- `system_started`, `system_ready`, `system_shutdown`: lifecycle flags
-- `started_at`: system start timestamp
-- `last_event_type`, `last_event_source`, `last_event_time`: latest event info
-- `event_count`: total events processed
-- `event_types`: count per event type
-- `modules_ready`: set of ready module names
+- event_type
 
----
+- event_payload
 
-## Snapshot Characteristics
+- context_snapshot (optional)
 
-Snapshots must be:
+- memory_snapshot (optional)
 
-- **Read-only** — no mutation possible
-- **Serializable** — can be converted to JSON/dict
-- **Detached** — independent of module internal state
-- **Safe** — no side effects when accessed
-- **Optional** — decision-making works without snapshots
+- timestamp metadata
 
----
+DecisionContext is still immutable and deterministic.
+
+## Rule Evaluation Model
+
+Rules can now evaluate conditions like:
+
+- "If event is X and memory shows Y, do task Z"
+
+- "If event is X but context mode is SAFE, do task A"
+
+Rules still follow:
+
+- evaluation in order
+
+- first match wins (default strategy)
+
+## Explainability Requirement
+
+Decision logs must include:
+
+- event received
+
+- decision invoked
+
+- snapshots included (yes/no)
+
+- matched rule name
+
+- submitted task name
+
+DecisionResult must include:
+
+- evaluated rule list
+
+- matched rule name
+
+- snapshot metadata flags
 
 ## Lifecycle Flow (v0.5.1)
-
 ```text
 Core.start()
-  → Engine.start()
-  → Modules loaded
-  → Snapshot providers registered (if get_snapshot exists)
-  → TaskRouter.start() (with snapshot_providers registry)
 
 Module emits event:
-  → EventDispatcher.emit(EVENT)
+  → EventDispatcher.emit(event)
 
 TaskRouter receives event:
-  → Collects snapshots from registered providers
-  → Builds DecisionContext (event + snapshots)
-  → Calls DecisionEngine.decide(context)
+  → collects snapshots from providers
+  → builds DecisionContext(event + snapshots)
+  → calls DecisionEngine.decide(context)
 
-DecisionEngine evaluates rules:
-  → Rules can access memory_snapshot and context_snapshot
-  → Returns DecisionResult
-
-TaskRouter submits task:
-  → TaskManager.submit()
+DecisionEngine returns DecisionResult:
+  → TaskRouter submits selected task
   → Worker executes task
 ```
-
----
-
-## Error Handling
-
-Snapshot collection is fault-tolerant:
-
-- If a provider fails, `None` is assigned to that snapshot
-- Decision-making continues with available snapshots
-- Errors are logged but do not block event processing
-- Rules should handle `None` snapshots gracefully
-
----
 
 ## Explicit Non-Goals
 
 The following are intentionally excluded from v0.5.1:
 
-- snapshot persistence
-- snapshot versioning
-- snapshot diff/comparison
-- automatic snapshot scheduling
-- snapshot caching strategies
-- snapshot validation
+- AI integration
 
-These concerns are reserved for future versions.
+- LLM usage
 
----
+- probabilistic decisions
+
+- learning
+
+- state mutation from rules
+
+- external brains
+
+- complex planning
 
 ## Expected Outcome
 
 At completion of v0.5.1:
 
-- modules can expose state as structured snapshots
-- decision rules can access system state safely
-- snapshot collection is automatic and fault-tolerant
-- architectural boundaries remain enforced
-- the system remains deterministic and testable
+- rules can make decisions using event + snapshots
 
----
+- memory and context remain passive
+
+- decision logic stays deterministic
+
+- architecture becomes ready for v0.6.0 (external intelligence)
 
 ## Architectural Principle
 
-> State belongs to modules.  
-> Snapshots belong to decisions.  
-> Never expose mutable state directly.
-
----
-
-## Migration from v0.5.0
-
-For modules to participate in snapshot collection:
-
-1. Implement `get_snapshot()` method
-2. Return a dictionary with serializable values
-3. Ensure snapshots are read-only representations
-
-No changes required to existing decision rules — they can now optionally access snapshots through `DecisionContext`.
+> A system must see its own state
+> before it can reason about the world.

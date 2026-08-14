@@ -14,7 +14,8 @@ from core.events.event import Event
 from core.decision.decision_engine import DecisionEngine
 from core.decision.rule import Rule
 from core.decision.decision_result import DecisionResult
-
+from core.decision.noop_strategy import NoOpStrategy
+from core.decision.rule_based_strategy import RuleBasedStrategy
 
 class Core:
     def __init__(self):
@@ -33,7 +34,8 @@ class Core:
         self.task_manager = TaskManager(self.task_registry, self.task_queue)
 
         # Decision layer (v0.5.0+)
-        self.decision_engine = DecisionEngine(self.logger)
+        ##self.decision_engine = DecisionEngine(self.logger,NoOpStrategy(self.logger))
+        self.decision_engine = DecisionEngine(self.logger, RuleBasedStrategy(self.logger))
 
         # Demo rule (v0.5.1)
         self.decision_engine.register_rule(
